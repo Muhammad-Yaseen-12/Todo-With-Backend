@@ -5,7 +5,7 @@ import TaskModel from "./models/task/task.js";
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 
