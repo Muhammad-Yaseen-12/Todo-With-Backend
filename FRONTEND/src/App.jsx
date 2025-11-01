@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import '@ant-design/v5-patch-for-react-19';
-import { 
-  Input, 
-  Button, 
-  List, 
-  Card, 
-  Space, 
-  Typography, 
+import {
+  Input,
+  Button,
+  List,
+  Card,
+  Space,
+  Typography,
   Tag,
   notification,
   Modal,
@@ -15,10 +15,10 @@ import {
   Empty,
   Grid
 } from 'antd'
-import { 
-  EditOutlined, 
-  DeleteOutlined, 
-  PlusOutlined, 
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
   CheckOutlined,
   CloseOutlined,
   ReloadOutlined
@@ -49,7 +49,9 @@ function App() {
   const getReq = async () => {
     try {
       setLoading(true)
-      const res = await axios.get("http://localhost:5000/task")
+      // const res = await axios.get(`${import.meta.env.VITE_BACKEND_LINK}`)
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_LINK}/task`)
+
       console.log("GET response:", res.data)
       setData(res.data)
     } catch (err) {
@@ -71,12 +73,12 @@ function App() {
     try {
       setLoading(true)
       if (editId) {
-        const res = await axios.put(`http://localhost:5000/task/${editId}`, { task: inp })
+        const res = await axios.put(`${import.meta.env.VITE_BACKEND_LINK}/task/${editId}`, { task: inp })
         console.log("Updated:", res.data)
         setEditId(null)
         showNotification('success', 'Success!', 'Task updated successfully!')
       } else {
-        const res = await axios.post("http://localhost:5000/task", { task: inp })
+        const res = await axios.post(`${import.meta.env.VITE_BACKEND_LINK}/task`, { task: inp })
         console.log("Added:", res.data)
         showNotification('success', 'Success!', 'Task added successfully!')
       }
@@ -91,8 +93,8 @@ function App() {
   }
 
   const deleteReq = async (id) => {
-    
-    
+
+
     confirm({
       title: 'Are you sure you want to delete this task?',
       icon: <DeleteOutlined style={{ color: '#ff4d4f' }} />,
@@ -102,18 +104,18 @@ function App() {
       cancelText: 'Cancel',
       onOk: async () => {
         try {
-          const response = await axios.delete(`http://localhost:5000/task/${id}`)
+          const response = await axios.delete(`${import.meta.env.VITE_BACKEND_LINK}/task/${id}`)
           console.log("DELETE response:", response.data)
-          
+
           // Update local state immediately for better UX
-         
-          
+
+
           setEditId(null)
           setInp("")
-          
+
           // Trigger reload to sync with server
           setReload(prev => !prev)
-          
+
           showNotification('success', 'Success!', 'Task deleted successfully!')
         } catch (error) {
           console.error("DELETE Error:", error)
@@ -170,8 +172,8 @@ function App() {
           </Card>
 
           {/* Input Section */}
-          <Card 
-            className="mb-4 shadow-sm border-0" 
+          <Card
+            className="mb-4 shadow-sm border-0"
             title={
               <Space direction={screens.xs ? "vertical" : "horizontal"} align={screens.xs ? "start" : "center"}>
                 {editId ? (
@@ -182,7 +184,7 @@ function App() {
                   <Tag icon={<PlusOutlined />} color="blue">
                     Add New Task
                   </Tag>
-                )}  
+                )}
                 <Text type="secondary" className={screens.xs ? "text-xs" : ""}>
                   {editId ? 'Update existing task' : 'Create a new task'}
                 </Text>
@@ -207,7 +209,7 @@ function App() {
                   icon={editId ? <CheckOutlined /> : <PlusOutlined />}
                   onClick={addOrUpdateTask}
                   loading={loading}
-                  style={{ 
+                  style={{
                     background: editId ? '#faad14' : '#1890ff',
                     borderColor: editId ? '#faad14' : '#1890ff'
                   }}
@@ -242,8 +244,8 @@ function App() {
               </Space>
             }
             extra={
-              <Button 
-                icon={<ReloadOutlined />} 
+              <Button
+                icon={<ReloadOutlined />}
                 onClick={handleRefresh}
                 loading={refreshing}
                 size={screens.xs ? "small" : "middle"}
@@ -327,7 +329,7 @@ function App() {
                         </div>
                       }
                       title={
-                        <Text 
+                        <Text
                           className={`${editId === taskItem._id ? 'text-orange-500 font-semibold' : ''} ${screens.xs ? 'text-sm' : ''}`}
                         >
                           {taskItem.task}
@@ -353,7 +355,7 @@ function App() {
           {/* Footer */}
           <div className="text-center mt-4">
             <Text type="secondary" className={screens.xs ? "text-xs" : ""}>
-              Total {data.length} {data.length === 1 ? 'task' : 'tasks'} • 
+              Total {data.length} {data.length === 1 ? 'task' : 'tasks'} •
               {editId ? ' Editing mode' : ' Ready to add'}
             </Text>
           </div>
